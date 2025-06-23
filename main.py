@@ -1,21 +1,16 @@
-from flask import Flask, request
-import json
-import time
+from flask import Flask, render_template, send_from_directory
+import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def home():
-    return "OwnTracks Server Online"
-
 @app.route('/')
-def map_view():
-    return render_template("index.html")
+def index():
+    return render_template('index.html')
 
-@app.route("/owntracks", methods=["POST"])
-def owntracks():
-    data = request.json
-    print(f"Received: {json.dumps(data)}")
-    with open("gps_log.json", "a") as f:
-        f.write(json.dumps({"timestamp": time.time(), "data": data}) + "\n")
-    return "OK", 200
+@app.route('/gps_log.json')
+def gps_log():
+    return send_from_directory('.', 'gps_log.json', mimetype='application/json')
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
