@@ -8,6 +8,10 @@ app = Flask(__name__)
 def home():
     return "OwnTracks Server Online"
 
+@app.route('/')
+def map_view():
+    return render_template("index.html")
+
 @app.route("/owntracks", methods=["POST"])
 def owntracks():
     data = request.json
